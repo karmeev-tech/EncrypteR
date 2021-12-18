@@ -16,10 +16,10 @@ namespace EncrypteR
             byte[] file = File.ReadAllBytes(path);
             using (var DES = new DESCryptoServiceProvider())
             {
-                DES.IV = Encoding.UTF8.GetBytes(key);
                 DES.Key = Encoding.UTF8.GetBytes(key);
                 DES.Mode = CipherMode.CBC;
                 DES.Padding = PaddingMode.PKCS7;
+                DES.IV = Encoding.UTF8.GetBytes(key);
 
 
                 using (var memStream = new MemoryStream())

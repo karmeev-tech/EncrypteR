@@ -1,3 +1,2 @@
-# EncrypteR
-Encrypt file;
-password must have 8 symbs
+### EncrypteR
+> File encryption software (base-level)

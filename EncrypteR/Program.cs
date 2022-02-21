@@ -11,15 +11,15 @@ namespace EncrypteR
     class Crypt
     {
         //пароль из 8 символов
-        public static void Encrypt(string path, string key)//зашифровать
+        public void Encrypt()//зашифровать
         {
             byte[] file = File.ReadAllBytes(path);
             using (var DES = new DESCryptoServiceProvider())
             {
-                DES.Key = Encoding.UTF8.GetBytes(key);
+                DES.Key = Encoding.UTF8.GetBytes(pass);
                 DES.Mode = CipherMode.CBC;
                 DES.Padding = PaddingMode.PKCS7;
-                DES.IV = Encoding.UTF8.GetBytes(key);
+                DES.IV = Encoding.UTF8.GetBytes(pass);
 
 
                 using (var memStream = new MemoryStream())
@@ -29,19 +29,21 @@ namespace EncrypteR
 
                     cryptoStream.Write(file, 0, file.Length);
                     cryptoStream.FlushFinalBlock();
-                    File.WriteAllBytes(path, memStream.ToArray());
+                    File.WriteAllBytes(path, memStream.ToArray());//добавить к пути +, чтоб он мог писать во второй файл.
                     Console.WriteLine("Encrypted succesfully " + path);
                 }
             }
+            //есть using (var memStream = ...)/ Нужно уйти 
+            //У класса Stream есть метод Copy To. Если правильно создать потоки, то все методы будут сводить к использованию Copy To
         }
 
-        public static void Decipher(string path, string key)//расшифровать
+        public void Decipher()//расшифровать
         {
             byte[] encrypted = File.ReadAllBytes(path);
             using (var DES = new DESCryptoServiceProvider())
             {
-                DES.IV = Encoding.UTF8.GetBytes(key);
-                DES.Key = Encoding.UTF8.GetBytes(key);
+                DES.IV = Encoding.UTF8.GetBytes(pass);
+                DES.Key = Encoding.UTF8.GetBytes(pass);
                 DES.Mode = CipherMode.CBC;
                 DES.Padding = PaddingMode.PKCS7;
 
@@ -63,6 +65,7 @@ namespace EncrypteR
         public string path; //сюда записываем путь к файлу, который расшифровываем или шифруем;
         public string pass; //сюда пароль к файлу;
     }
+    
 
     class Program
     {
@@ -70,24 +73,19 @@ namespace EncrypteR
         {
             Console.WriteLine("1 - зашифровать | 2 - расшифровать");
             string numb = Console.ReadLine();
+            Console.WriteLine("Введите путь");
             Crypt fbi = new Crypt();
+            fbi.path = Console.ReadLine();
+            Console.WriteLine("Введите пароль из 8 символов");
+            fbi.pass = Console.ReadLine();
             switch (numb)
             {
                 case "1":
-                    Console.WriteLine("Введите путь");
-                    fbi.path = Console.ReadLine();
-                    Console.WriteLine("Введите пароль из 8 символов");
-                    fbi.pass = Console.ReadLine();
-                    Crypt.Encrypt(fbi.path,fbi.pass);
+                    fbi.Encrypt();
                     break;
                 case "2":
-                    Console.WriteLine("Введите путь");
-                    fbi.path = Console.ReadLine();
-                    Console.WriteLine("Введите пароль из 8 символов");
-                    fbi.pass = Console.ReadLine();
-                    Crypt.Decipher(fbi.path, fbi.pass);
+                    fbi.Decipher();
                     break;
-                   
             }
         }
 

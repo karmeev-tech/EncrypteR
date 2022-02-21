@@ -77,7 +77,7 @@ namespace EncrypteR
             Console.WriteLine("Введите путь");
             Crypt fbi = new Crypt();
             fbi.path = Console.ReadLine();
-            fbi.path = "C:\\Users\\karmeev-technology\\Documents\\work\\encrypter\\EncrypteR\\bin\\Debug\\C1793.JPG"; //нужна чисто для теста, чтоб время не тратить, работаем с картинкой в качестве примера
+            //fbi.path = "C:\\Users\\karmeev-technology\\Documents\\work\\encrypter\\EncrypteR\\bin\\Debug\\C1793.JPG"; //нужна чисто для теста, чтоб время не тратить, работаем с картинкой в качестве примера
             Console.WriteLine("Введите пароль из 8 символов");
             fbi.pass = Console.ReadLine();
             fbi.pass = "12345678";//также чисто для теста, потом все это дело из релиза уберём

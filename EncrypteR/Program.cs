@@ -13,7 +13,6 @@ namespace EncrypteR
         //пароль из 8 символов
         public void Encrypt()//зашифровать
         {
-            byte[] file = File.ReadAllBytes(path);
             using (var DES = new DESCryptoServiceProvider())
             {
                 DES.Key = Encoding.UTF8.GetBytes(pass);
@@ -22,19 +21,21 @@ namespace EncrypteR
                 DES.IV = Encoding.UTF8.GetBytes(pass);
 
 
-                using (var memStream = new MemoryStream())
+                using (var file = File.Open(path, FileMode.Open))
                 {
-                    CryptoStream cryptoStream = new CryptoStream(memStream, DES.CreateEncryptor(),
+                    MemoryStream mem = new MemoryStream();
+                    CryptoStream cryptoStream = new CryptoStream(mem, DES.CreateEncryptor(),
                         CryptoStreamMode.Write);
 
-                    cryptoStream.Write(file, 0, file.Length);
+                    file.CopyTo(cryptoStream);
                     cryptoStream.FlushFinalBlock();
-                    File.WriteAllBytes(path, memStream.ToArray());//добавить к пути +, чтоб он мог писать во второй файл.
+
+                    File.WriteAllBytes(path + "crypt", mem.ToArray());
                     Console.WriteLine("Encrypted succesfully " + path);
                 }
             }
             //есть using (var memStream = ...)/ Нужно уйти 
-            //У класса Stream есть метод Copy To. Если правильно создать потоки, то все методы будут сводить к использованию Copy To
+            //У класса Stream есть метод Copy To. Если правильно создать потоки, то все методы будут сводить к использованию Copy To Stream.CopyTo(file)
         }
 
         public void Decipher()//расшифровать
@@ -76,8 +77,10 @@ namespace EncrypteR
             Console.WriteLine("Введите путь");
             Crypt fbi = new Crypt();
             fbi.path = Console.ReadLine();
+            fbi.path = "C:\\Users\\karmeev-technology\\Documents\\work\\encrypter\\EncrypteR\\bin\\Debug\\C1793.JPG"; //нужна чисто для теста, чтоб время не тратить, работаем с картинкой в качестве примера
             Console.WriteLine("Введите пароль из 8 символов");
             fbi.pass = Console.ReadLine();
+            fbi.pass = "12345678";//также чисто для теста, потом все это дело из релиза уберём
             switch (numb)
             {
                 case "1":
@@ -91,4 +94,5 @@ namespace EncrypteR
 
 
     }
+
 }

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading;
 using System.IO;
 
 namespace EncrypteR
@@ -23,14 +24,15 @@ namespace EncrypteR
 
                 using (var file = File.Open(path, FileMode.Open))
                 {
-                    MemoryStream mem = new MemoryStream();
-                    CryptoStream cryptoStream = new CryptoStream(mem, DES.CreateEncryptor(),
+                    FileStream mem = new FileStream(path + ".crypt", FileMode.Open);
+                    CryptoStream cryptoStream = new CryptoStream(file, DES.CreateEncryptor(),
                         CryptoStreamMode.Write);
 
-                    file.CopyTo(cryptoStream);
+                    cryptoStream.CopyTo(mem);
                     cryptoStream.FlushFinalBlock();
 
-                    File.WriteAllBytes(path + "crypt", mem.ToArray());
+                    //File.WriteAllBytes(path + "crypt", mem.ToArray());
+                    //string xyn = "C:\\Users\\karmeev-technology\\Documents\\work\\encrypter\\EncrypteR\\bin\\Debug\\2.txt";
                     Console.WriteLine("Encrypted succesfully " + path);
                 }
             }
@@ -78,6 +80,7 @@ namespace EncrypteR
             Crypt fbi = new Crypt();
             fbi.path = Console.ReadLine();
             //fbi.path = "C:\\Users\\karmeev-technology\\Documents\\work\\encrypter\\EncrypteR\\bin\\Debug\\C1793.JPG"; //нужна чисто для теста, чтоб время не тратить, работаем с картинкой в качестве примера
+            fbi.path = "C:\\Users\\karmeev-technology\\Documents\\work\\encrypter\\EncrypteR\\bin\\Debug\\1.txt";
             Console.WriteLine("Введите пароль из 8 символов");
             fbi.pass = Console.ReadLine();
             fbi.pass = "12345678";//также чисто для теста, потом все это дело из релиза уберём

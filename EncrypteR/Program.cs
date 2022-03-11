@@ -24,7 +24,7 @@ namespace EncrypteR
 
                 using (var file = File.Open(path, FileMode.Open))
                 {
-                    FileStream mem = new FileStream(path + ".crypt", FileMode.Open);
+                    FileStream mem = new FileStream(path + ".crypt", FileMode.Create);
                     CryptoStream cryptoStream = new CryptoStream(file, DES.CreateEncryptor(),
                         CryptoStreamMode.Write);
 

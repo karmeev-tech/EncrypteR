@@ -21,17 +21,26 @@ namespace EncrypteR
                 DES.Padding = PaddingMode.PKCS7;
                 DES.IV = Encoding.UTF8.GetBytes(pass);
 
-
-                using (var file = File.Open(path, FileMode.Open))
+                string path2 = "C:\\Users\\karmeev-technology\\Documents\\work\\encrypter\\EncrypteR\\bin\\Debug\\2.txt"; //это для удобства, можно смело убирать, файл 2.txt - это ориг
+                using (var file = File.Open(path, FileMode.Open, FileAccess.ReadWrite))
                 {
-                    FileStream mem = new FileStream(path + ".crypt", FileMode.Create);
+                    FileStream mem = File.Open(path2, FileMode.Open, FileAccess.ReadWrite);
                     CryptoStream cryptoStream = new CryptoStream(file, DES.CreateEncryptor(),
                         CryptoStreamMode.Write);
 
-                    cryptoStream.CopyTo(mem);
+                    byte[] bytes = new byte[mem.Length];
+
+                    mem.CopyTo(cryptoStream);
+
+                    //mem.Read(bytes, 0, bytes.Length);
+                    //cryptoStream.Write(bytes, 0, bytes.Length);
+
+                    mem.Flush();
                     cryptoStream.FlushFinalBlock();
 
-                    //File.WriteAllBytes(path + "crypt", mem.ToArray());
+                    //cryptoStream.CopyTo(mem);
+                    //тут из потока надо в файл сделать
+                    //File.WriteAllBytes(path + "1", mem);
                     //string xyn = "C:\\Users\\karmeev-technology\\Documents\\work\\encrypter\\EncrypteR\\bin\\Debug\\2.txt";
                     Console.WriteLine("Encrypted succesfully " + path);
                 }
@@ -68,7 +77,7 @@ namespace EncrypteR
         public string path; //сюда записываем путь к файлу, который расшифровываем или шифруем;
         public string pass; //сюда пароль к файлу;
     }
-    
+
 
     class Program
     {
@@ -99,3 +108,4 @@ namespace EncrypteR
     }
 
 }
+

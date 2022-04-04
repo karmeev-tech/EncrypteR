@@ -11,8 +11,7 @@ namespace EncrypteR
 {
     class Crypt
     {
-        //пароль из 8 символов
-        public void Encrypt()//зашифровать
+        public void Encrypt()
         {
             using (var DES = new DESCryptoServiceProvider())
             {
@@ -20,33 +19,17 @@ namespace EncrypteR
                 DES.Mode = CipherMode.CBC;
                 DES.Padding = PaddingMode.PKCS7;
                 DES.IV = Encoding.UTF8.GetBytes(pass);
-
-                string path2 = "C:\\Users\\karmeev-technology\\Documents\\work\\encrypter\\EncrypteR\\bin\\Debug\\2.txt"; //это для удобства, можно смело убирать, файл 2.txt - это ориг
-                using (var file = File.Open(path, FileMode.Open, FileAccess.ReadWrite))
+                using (var file = File.Open("encryptfile.txt", FileMode.Open, FileAccess.ReadWrite))
                 {
-                    FileStream mem = File.Open(path2, FileMode.Open, FileAccess.ReadWrite);
+                    FileStream mem = File.Open(path, FileMode.Open, FileAccess.ReadWrite);
                     CryptoStream cryptoStream = new CryptoStream(file, DES.CreateEncryptor(),
                         CryptoStreamMode.Write);
-
-                    byte[] bytes = new byte[mem.Length];
-
                     mem.CopyTo(cryptoStream);
-
-                    //mem.Read(bytes, 0, bytes.Length);
-                    //cryptoStream.Write(bytes, 0, bytes.Length);
-
                     mem.Flush();
                     cryptoStream.FlushFinalBlock();
-
-                    //cryptoStream.CopyTo(mem);
-                    //тут из потока надо в файл сделать
-                    //File.WriteAllBytes(path + "1", mem);
-                    //string xyn = "C:\\Users\\karmeev-technology\\Documents\\work\\encrypter\\EncrypteR\\bin\\Debug\\2.txt";
-                    Console.WriteLine("Encrypted succesfully " + path);
+                    Console.WriteLine("Encrypted succesfully. Your File is encryptedfile.txt");
                 }
             }
-            //есть using (var memStream = ...)/ Нужно уйти 
-            //У класса Stream есть метод Copy To. Если правильно создать потоки, то все методы будут сводить к использованию Copy To Stream.CopyTo(file)
         }
 
         public void Decipher()//расшифровать
@@ -74,8 +57,8 @@ namespace EncrypteR
 
         }
 
-        public string path; //сюда записываем путь к файлу, который расшифровываем или шифруем;
-        public string pass; //сюда пароль к файлу;
+        public string path; 
+        public string pass; 
     }
 
 
@@ -88,11 +71,8 @@ namespace EncrypteR
             Console.WriteLine("Введите путь");
             Crypt fbi = new Crypt();
             fbi.path = Console.ReadLine();
-            //fbi.path = "C:\\Users\\karmeev-technology\\Documents\\work\\encrypter\\EncrypteR\\bin\\Debug\\C1793.JPG"; //нужна чисто для теста, чтоб время не тратить, работаем с картинкой в качестве примера
-            fbi.path = "C:\\Users\\karmeev-technology\\Documents\\work\\encrypter\\EncrypteR\\bin\\Debug\\1.txt";
             Console.WriteLine("Введите пароль из 8 символов");
             fbi.pass = Console.ReadLine();
-            fbi.pass = "12345678";//также чисто для теста, потом все это дело из релиза уберём
             switch (numb)
             {
                 case "1":

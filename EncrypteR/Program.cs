@@ -34,24 +34,22 @@ namespace EncrypteR
 
         public void Decipher()//расшифровать
         {
-            byte[] encrypted = File.ReadAllBytes(path);
+
             using (var DES = new DESCryptoServiceProvider())
             {
-                DES.IV = Encoding.UTF8.GetBytes(pass);
                 DES.Key = Encoding.UTF8.GetBytes(pass);
                 DES.Mode = CipherMode.CBC;
                 DES.Padding = PaddingMode.PKCS7;
-
-
-                using (var memStream = new MemoryStream())
+                DES.IV = Encoding.UTF8.GetBytes(pass);
+                using (var file = File.Open("decryptfile.txt", FileMode.Open, FileAccess.ReadWrite))
                 {
-                    CryptoStream cryptoStream = new CryptoStream(memStream, DES.CreateDecryptor(),
+                    FileStream mem = File.Open("encryptfile.txt", FileMode.Open, FileAccess.ReadWrite);
+                    CryptoStream cryptoStream = new CryptoStream(file, DES.CreateDecryptor(),
                         CryptoStreamMode.Write);
-
-                    cryptoStream.Write(encrypted, 0, encrypted.Length);
+                    mem.CopyTo(cryptoStream);
+                    mem.Flush();
                     cryptoStream.FlushFinalBlock();
-                    File.WriteAllBytes(path, memStream.ToArray());
-                    Console.WriteLine("Decrypted succesfully " + path);
+                    Console.WriteLine("Derypted succesfully. Your File is decryptedfile.txt. File decrypted");
                 }
             }
 
